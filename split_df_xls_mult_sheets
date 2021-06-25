@@ -1,0 +1,20 @@
+import pandas as pd
+
+# public data from https://www.kaggle.com/crawford/80-cereals
+df = pd.read_csv('cereal.csv')
+
+print(df.head())
+
+mfrs = df.mfr.unique().tolist()
+print(mfrs)
+# split by a col: mfr
+groups = df.groupby(df.mfr)
+
+# write each split to a sep tab
+writer = pd.ExcelWriter('cereal_split_by_mfr.xlsx', engine='xlsxwriter')
+for mfr in mfrs:
+    df_temp = groups.get_group(mfr)
+    df_temp.to_excel(writer, sheet_name=mfr, index=False)
+    
+writer.save()  
+
